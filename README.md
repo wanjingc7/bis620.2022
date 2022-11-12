@@ -8,6 +8,7 @@
 [![R-CMD-check](https://github.com/wanjingc7/bis620.2022/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/wanjingc7/bis620.2022/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wanjingc7/bis620.2022?branch=main)
+[![lint](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
 The goal of bis620.2022 is to …
@@ -49,7 +50,7 @@ You’ll still need to render `README.Rmd` regularly, to keep `README.md`
 up-to-date. `devtools::build_readme()` is handy for this. You could also
 use GitHub Actions to re-render `README.Rmd` every time you push. An
 example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+<https://github.com/r-lib/acti1ons/tree/v1/examples>.
 
 You can also embed plots, for example:
 
