@@ -6,8 +6,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/wanjingc7/bis620.2022/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/wanjingc7/bis620.2022/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wanjingc7/bis620.2022?branch=main)
 [![lint](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml)
 [![test-coverage](https://github.com/wanjingc7/bis620.2022/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
