@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^data-raw$
+^.DS_Store$
+^.Rhistory$
+^.Rproj.user$
