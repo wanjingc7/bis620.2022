@@ -8,6 +8,9 @@
 [![R-CMD-check](https://github.com/wanjingc7/bis620.2022/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/R-CMD-check.yaml)
 [![lint](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml)
 [![test-coverage](https://github.com/wanjingc7/bis620.2022/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/test-coverage.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/wanjingc7/bis620.2022/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wanjingc7/bis620.2022?branch=main)
+[![codecov](https://github.com/wanjingc7/bis620.2022/actions/workflows/codecov.yml/badge.svg)](https://github.com/wanjingc7/bis620.2022/actions/workflows/codecov.yml)
 <!-- badges: end -->
 
 The goal of bis620.2022 is to …
