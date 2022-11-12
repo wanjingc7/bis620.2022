@@ -5,3 +5,5 @@
 ^.DS_Store$
 ^.Rhistory$
 ^.Rproj.user$
+^README\.Rmd$
+^\.github$
