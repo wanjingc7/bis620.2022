@@ -12,7 +12,12 @@
 coverage](https://codecov.io/gh/wanjingc7/bis620.2022/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wanjingc7/bis620.2022?branch=main)
 <!-- badges: end -->
 
-The goal of bis620.2022 is to …
+The goal of bis620.2022 is to 1. Capture spectral signature of
+Accelerometry data with three dimensions using Fast Fourier Transform
+(FFT) and also calculate frequency with time.
+
+2.  Create a visualization for movements in three dimensions with time
+    or frequency.
 
 ## Installation
 
@@ -31,31 +36,36 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(bis620.2022)
 ## basic example code
+
+#to get FFT of dimensions and frequency from time
+data("ukb_accel")
+ukb_accel |> spectral_signature()
+#> # A tibble: 540,000 × 4
+#>          X      Y       Z      freq
+#>      <dbl>  <dbl>   <dbl>     <dbl>
+#>  1  78038. 28208. 753298. 0.0000913
+#>  2 153932. 98732.  53521. 0.0000913
+#>  3  43385. 58240.  66251. 0.0000913
+#>  4  53004. 50652.  10922. 0.0000913
+#>  5  97164. 76529.  59418. 0.0000913
+#>  6  30740. 49130. 101001. 0.0000913
+#>  7 116648. 58509.  84698. 0.0000913
+#>  8  43271. 55604.  39442. 0.0000913
+#>  9  63228. 73288.  46781. 0.0000913
+#> 10  56477. 17581.  70102. 0.0000913
+#> # … with 539,990 more rows
+
+#to create visualization of movement with time
+ukb_accel |> accel_plot()
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+<img src="man/figures/README-example-1.png" width="100%" />
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+
+#to create visualization of fast discrete fourier transformed
+#movement with frequency
+ukb_accel |> spectral_signature() |> accel_plot()
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/acti1ons/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+<img src="man/figures/README-example-2.png" width="100%" />
