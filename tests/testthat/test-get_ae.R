@@ -62,7 +62,7 @@ test_that(
   "The get_response() returns the right plot",
   {
     data(full_data)
-    p <- get_ae(full_data, "AETERM", "ATRT", 20)[[1]]
+    p <- get_ae(full_data, "AETERM", "ATRT", 20)[[2]]
     vdiffr::expect_doppelganger("ae-distribution", p)
   }
 )

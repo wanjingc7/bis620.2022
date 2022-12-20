@@ -54,7 +54,7 @@ knitr::opts_chunk$set(
 data("full_data")
 
 #> a brief overview of the first patient from the demo dataset
-full_data[1,]
+full_data[1, ]
 ```
 
 ## Method
@@ -80,7 +80,7 @@ Based on the bar chart above, the age distributions of the patients divided by t
 ```{r, fig.align='center', fig.dim = c(5, 3.5)}
 bis620.2022::descriptive_var(full_data, "SUBJID", "SEX", "ATRT")[[1]] %>%
   kable()
-print(bis620.2022::descriptive_var(full_data, "SUBJID", "SEX", "ATRT")[[2]] )
+print(bis620.2022::descriptive_var(full_data, "SUBJID", "SEX", "ATRT")[[2]])
 ```
 
 For both groups, males were the majority among all patients with the number of over 200 while females were less than 50.
@@ -90,7 +90,7 @@ For both groups, males were the majority among all patients with the number of o
 ```{r, fig.align='center', fig.dim = c(10, 3)}
 descriptive_var(full_data, "SUBJID", "RACE", "ATRT")[[1]] %>%
   kable()
-print(descriptive_var(full_data, "SUBJID", "RACE", "ATRT")[[2]] )
+print(descriptive_var(full_data, "SUBJID", "RACE", "ATRT")[[2]])
 ```
 
 According to the chart above, the leading ethnicity from both actual treatment with and without Panitumumab was "White or Caucasian" accounting for over 200 patients separately. In addition, "Asian" was the second ethnicity in the lead with approximately 25 patients in each group. "Black or African American" was only present in the study group of Panitumumab and chemotherapy with the count of 1 while "Hispanic or Lanito" was only present in the study group of chemotherapy with the count of 1.
@@ -100,7 +100,7 @@ According to the chart above, the leading ethnicity from both actual treatment w
 ```{r, fig.align='center', fig.dim = c(5, 3.5)}
 descriptive_var(full_data, "SUBJID", "HPV", "ATRT")[[1]] %>%
   kable()
-print(descriptive_var(full_data, "SUBJID", "HPV", "ATRT")[[2]] )
+print(descriptive_var(full_data, "SUBJID", "HPV", "ATRT")[[2]])
 ```
 
 Based on this chart, most patients were diagnosed as negative for the two study groups. The number of both negative and positive patients from the group with Panitumumab and chemotherapy were relatively more than those from Chemotherapy only. Further interpretation is limited due to 102 "Unknown" for the chemotherapy-only group and 79 "Unknown" for the Panitumumab and chemotherapy group.
@@ -110,7 +110,7 @@ Based on this chart, most patients were diagnosed as negative for the two study 
 ```{r, fig.align='center', fig.dim = c(7, 3.5)}
 descriptive_var(full_data, "SUBJID", "B_ECOG", "ATRT")[[1]] %>%
   kable()
-print(descriptive_var(full_data, "SUBJID", "B_ECOG", "ATRT")[[2]] )
+print(descriptive_var(full_data, "SUBJID", "B_ECOG", "ATRT")[[2]])
 ```
 
 According to the illustrations above, most patients from both study groups had "symptoms but ambulatory." However, there were 188 patients from the study group using Panitumumab and chemotherapy noted with "symptoms but ambulatory" which was relatively more than those from the chemotherapy-only group while there where 70 patients from the group using Panitumumab and chemotherapy noted with "fully active" which was relatively less than those from the chemotherapy-only group.
@@ -146,11 +146,12 @@ For each diagnosis type from both study groups, "Stage IVa-IVb" was the dominant
 
 
 ```{r}
-l1 <- prognostic_var(full_data, "SUBJID","ATRT", "Chemotherapy", "DEATH_FLAG", "DIAGTYPE")
-coef <- l1$coefficients
-p.values <-summary(l1)$coefficients[,"Pr(>|z|)"]
+l1 <- prognostic_var(full_data, "SUBJID", "ATRT", "Chemotherapy",
+                     "DEATH_FLAG", "DIAGTYPE")
+var_coef <- l1$coefficients
+p_values <- summary(l1)$coefficients[, "Pr(>|z|)"]
 
-as.data.frame(cbind(coef,p.values))%>%kable()
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 
 According to the P-value, 0.57 for larynx patients, 0.92 for oral cavity patients, and 0.48 for oropharynx patients, it is concluded that diagnosis type is not prognostic in terms of the death outcomes from the chemotherapy-only group. 
@@ -158,10 +159,11 @@ According to the P-value, 0.57 for larynx patients, 0.92 for oral cavity patient
 ### 2.2 Prognostic test on ECOG and Death Outcome in the Control Group
 
 ```{r}
-l2 = prognostic_var(full_data, "SUBJID","ATRT", "Chemotherapy", "DEATH_FLAG", "B_ECOG")
-coef <- l2$coef
-p.values <- summary(l2)$coefficients[,"Pr(>|z|)"]
-as.data.frame(cbind(coef,p.values))%>%kable()
+l2 <- prognostic_var(full_data, "SUBJID", "ATRT", "Chemotherapy",
+                     "DEATH_FLAG", "B_ECOG")
+var_coef <- l2$coef
+p_values <- summary(l2)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 Based on the p-values returned, 0.98 for the status "In bed less than 50% of the time" and 0.07 for "Symptoms but ambulatory", which are both greater than 0.05. It is seen that ECOG status, as the scale to access the disease progression is not prognostic to the death outcomes from the control group.
 
@@ -172,12 +174,12 @@ Based on the p-values returned, 0.98 for the status "In bed less than 50% of the
 
 ### 2.3 Predictivity test on Gender, Actual Treatment and Death Outcome
 ```{r}
-l3 = predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
-                       var_col = "SEX", interaction = T)
-coef <- l3$coefficients
-p.values <- summary(l3)$coefficients[, "Pr(>|z|)"]
+l3 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "SEX", interaction = TRUE)
+var_coef <- l3$coefficients
+p_values <- summary(l3)$coefficients[, "Pr(>|z|)"]
 
-as.data.frame(cbind(coef,p.values))%>%kable()
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 According to the summary above, the p-value for gender is 0.06 and 0.14 for the actual treatment, implying the insignificance of gender and Panitumumab as individual factor on the death outcome performance. Hence, gender is not predictive with regards to the use of Panitumumab and the death outcome.
 
@@ -185,11 +187,11 @@ According to the summary above, the p-value for gender is 0.06 and 0.14 for the 
 
 
 ```{r}
-l4 = predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
-                       var_col = "AGE", interaction = T)
-coef <- l4$coefficients
-p.values <- summary(l4)$coefficients[, "Pr(>|z|)"]
-as.data.frame(cbind(coef,p.values))%>%kable()
+l4 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "AGE", interaction = TRUE)
+var_coef <- l4$coefficients
+p_values <- summary(l4)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 Based on the p-values, 0.22 for age and 0.40 for the actual treatment that are greater than 0.05, the effect of age and the actual treatment on death outcomes is not significant. Therefore, predictivity of age on treatment and death outcomes is not proved.
 
@@ -197,12 +199,12 @@ Based on the p-values, 0.22 for age and 0.40 for the actual treatment that are g
 
 
 ```{r}
-l5 = predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
-                       var_col = "RACE", interaction = T)
+l5 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "RACE", interaction = TRUE)
 
-coef <- l5$coefficients
-p.values <- summary(l5)$coefficients[, "Pr(>|z|)"]
-as.data.frame(cbind(coef,p.values))%>%kable()
+var_coef <- l5$coefficients
+p_values <- summary(l5)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 
 Based on the p-values that are no less that 0.50 for ethnicity types and the actual treatment that are greater than 0.05, the impact of ethnicity and the actual treatment on death outcomes is insignificant. Therefore, ethinicity is not a predictive factor in terms of treatment and death outcomes.
@@ -210,35 +212,35 @@ Based on the p-values that are no less that 0.50 for ethnicity types and the act
 ### 2.6 Predictivity test on HPV status, Actual Treatment and Death Outcome
 
 ```{r}
-l6 = predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
-                       var_col = "HPV", interaction = T)
+l6 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "HPV", interaction = TRUE)
 
-coef <- l6$coefficients
-p.values <- summary(l6)$coefficients[, "Pr(>|z|)"]
-as.data.frame(cbind(coef,p.values))%>%kable()
+var_coef <- l6$coefficients
+p_values <- summary(l6)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 As the p-value for HPV status is 0.09 and 0.14 for the actual treatment, it is concluded that these two factors individually are not significant on the performance of death outcome. As a result, HPV status is not applicable for a predictive factor in this scenario.
 
 
 ### 2.7 Predictivity test on ECOG Status, Actual Treatment and Death Outcome
 ```{r}
-l7 = predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
-                       var_col = "B_ECOG", interaction = T)
+l7 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "B_ECOG", interaction = TRUE)
 
-coef <- l7$coefficients
-p.values <- summary(l7)$coefficients[, "Pr(>|z|)"]
-as.data.frame(cbind(coef,p.values))%>%kable()
+var_coef <- l7$coefficients
+p_values <- summary(l7)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 Based on the summary shown above, no p-values for the actual treatment, the status of "In bed less than 50% of the time", and "Symptoms but ambulatory" are less than 0.07. Therefore, both ECOG status and the actual treatment are insignificant factor in terms of the death outcome of patients. Hence, ECOG status is not predictive with regards to this clinical trail. 
 
 ### 2.8 Predictivity test on Diagnosis Type, Actual Treatment and Death Outcome
 ```{r}
-l8 = predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
-                       var_col = "DIAGTYPE", interaction = T)
+l8 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "DIAGTYPE", interaction = TRUE)
 
-coef <- l8$coefficients
-p.values <- summary(l8)$coefficients[, "Pr(>|z|)"]
-as.data.frame(cbind(coef,p.values))%>%kable()
+var_coef <- l8$coefficients
+p_values <- summary(l8)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 According to the test result above, the p-values for the diagnosis types and the actual treatment itself are all greater than at least 0.2, which is significantly larger than 0.05. It could be told that diagnosis type and the actual treatment individually have no significant impact on the performance of death outcome. Therefore, diagnosis type is not predictive with regards to the actual treatment and the death outcome. 
 
