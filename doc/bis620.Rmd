@@ -17,3 +17,281 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(bis620.2022)
 ```
+
+```{r, include = FALSE}
+library(knitr)
+library(dplyr)
+```
+
+## Introduction
+
+This vignette aims to illustrate the application of "bis620.2022" package on the research analysis of treatment methods in the form of two-arm clinical trials.
+
+For demonstration, we will use the dataset **A Phase 3 Randomized Trial of Chemotherapy With or Without Panitumumab in Patients With Metastatic and/or Recurrent Squamous Cell Carcinoma of the Head and Neck (SCCHN)** and examine the following research questions:
+
+-   To what extent does panitumumab perform on patients with the head and neck cancer?
+    -   How do different groups (based on age, sex, ethnicity, HPV, ECOG status, and cancer type including diagnosis stage) of patients respond to panitumumab?
+    -   What is the distribution of best outcomes in terms of progressive disease, stable disease, partial response and complete response in different diagnosis types faceted by study arms?
+    -   Based on the actual treatment, what are the adverse events associated and the distributions of severity levels accordingly?
+
+
+Our hypothesis is that:
+
+$H_{0}$: Panitumumab does not have effect on the participants with the head and neck cancer in terms of the death outcome and adverse events distribution.
+
+$H_{1}$: Panitumumab has an effect on the participants with the head and neck cancer in terms of the death outcome and adverse events distribution.
+
+Reference:
+
+*Amgen. (2018). A Phase 3 Randomized Trial of Chemotherapy With or Without Panitumumab in Patients With Metastatic and/or Recurrent Squamous Cell Carcinoma of the Head and Neck (SCCHN) [Data set]. Project Data Sphere. [Study Link](https://doi.org/10.34949/3EAJ-MD88)*
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+```
+
+```{r}
+#> load full_data table
+data("full_data")
+
+#> a brief overview of the first patient from the demo dataset
+full_data[1, ] %>% kable()
+```
+
+## Method
+
+In order to delve into the research questions, we plan to divide the research into two sections. The first section is to investigate the distribution of the baseline characteristics of the patients including age, sex, the primary tumor diagnosis including disease stage, the HPV status, and the baseline ECOG performance status(the scale to access one's disease progression). Secondly, after acquiring a comprehensive understanding of the baseline features of these participants, we will analyze the efficacy of Panitumumab by comparing the death rate of patients categorized based on the selected baseline features and the actual treatment. Furthermore, we will look into and compare the distributions of best outcomes by diagnosis types and study arms. Lastly, we will evaluate the adverse event distributions between participants with and without the intake of Panitumumab.
+
+
+## Part I: Baseline Characteristics of Patients
+
+#### Utilizing the functions including *plot_age*, *descriptive_var*, and *get_diag* from our package, the following demonstrates the distribution of the baseline characteristics of the patients including age, sex, ethnicity, HPV, ECOG status, and cancer type including diagnosis stage.
+
+### 1.1 Age Distribution of Patients by Study Arm
+
+
+```{r, fig.align='center', fig.dim = c(5, 3.5)}
+bis620.2022::plot_age(full_data, "SUBJID", "AGE", "ATRT", 10)
+```
+
+Based on the bar chart above, the age distributions of the patients divided by the actual treatment from this clinical trial was relatively even. Patients with ages between 50-70 took up the majority of the two groups. Notably, among the patients with chemotherapy and Panitumumab, there are 140 patients with ages between 50-60 which was the most significant age category compared to others in this study group.
+
+### 1.2 Gender Distribution of Patients by Study Arm
+
+
+```{r, fig.align='center', fig.dim = c(5, 3.5)}
+bis620.2022::descriptive_var(full_data, "SUBJID", "SEX", "ATRT")[[1]] %>%
+  kable()
+print(bis620.2022::descriptive_var(full_data, "SUBJID", "SEX", "ATRT")[[2]])
+```
+
+For both groups, males were the majority among all patients with the number of over 200 while females were less than 50.
+
+### 1.3 Ethnicity Distribution of Patients by Study Arm
+
+```{r, fig.align='center', fig.dim = c(10, 3)}
+descriptive_var(full_data, "SUBJID", "RACE", "ATRT")[[1]] %>%
+  kable()
+print(descriptive_var(full_data, "SUBJID", "RACE", "ATRT")[[2]])
+```
+
+According to the chart above, the leading ethnicity from both actual treatment with and without Panitumumab was "White or Caucasian" accounting for over 200 patients separately. In addition, "Asian" was the second ethnicity in the lead with approximately 25 patients in each group. "Black or African American" was only present in the study group of Panitumumab and chemotherapy with the count of 1 while "Hispanic or Lanito" was only present in the study group of chemotherapy with the count of 1.
+
+### 1.4 HPV Distribution of Patients by Study Arm
+
+```{r, fig.align='center', fig.dim = c(5, 3.5)}
+descriptive_var(full_data, "SUBJID", "HPV", "ATRT")[[1]] %>%
+  kable()
+print(descriptive_var(full_data, "SUBJID", "HPV", "ATRT")[[2]])
+```
+
+Based on this chart, most patients were diagnosed as negative for the two study groups. The number of both negative and positive patients from the group with Panitumumab and chemotherapy were relatively more than those from Chemotherapy only. Further interpretation is limited due to 102 "Unknown" for the chemotherapy-only group and 79 "Unknown" for the Panitumumab and chemotherapy group.
+
+### 1.5 ECOG Status Distribution of Patients by Study Arm
+
+```{r, fig.align='center', fig.dim = c(7, 3.5)}
+descriptive_var(full_data, "SUBJID", "B_ECOG", "ATRT")[[1]] %>%
+  kable()
+print(descriptive_var(full_data, "SUBJID", "B_ECOG", "ATRT")[[2]])
+```
+
+According to the illustrations above, most patients from both study groups had "symptoms but ambulatory." However, there were 188 patients from the study group using Panitumumab and chemotherapy noted with "symptoms but ambulatory" which was relatively more than those from the chemotherapy-only group while there where 70 patients from the group using Panitumumab and chemotherapy noted with "fully active" which was relatively less than those from the chemotherapy-only group.
+
+### 1.6 Diagnosis without/with Diagnosis Stage Distribution of Patients by Study Arm
+
+
+```{r,fig.align='center', fig.dim = c(10, 3)}
+get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT")[[1]] %>%
+  head(10) %>% 
+  kable()#the first 10 rows of the counts of diagnosis types without stages are shown below
+print(get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT")[[2]])
+```
+
+For both study groups, the distribution of Larynx and Oripharynx patients were relatively even with the count close to 75. The number of oral cavity patients from the chemotherapy only group was 79 that is 17 more than those from the Panitumumab and chemotherapy group. In addition, there were relatively less patients diagnosed with Hypopharynx, specifically 32 in the chemotherapy-only group and 43 in the Panitumumab and chemotherapy group.
+
+```{r, fig.align='center', fig.dim = c(10, 3)}
+get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT", "DIAGSTAG")[[1]] %>%
+  head(10) %>% 
+  kable()#the first 10 rows of the counts of diagnosis types with stages are shown below
+print(get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT", "DIAGSTAG")[[2]])
+```
+
+For each diagnosis type from both study groups, "Stage IVa-IVb" was the dominant diagnosis stage compared to other stages with at least 7 more patients than the second leading diagnosis stage except for oral cavity patients from the Panitumumab and chemotherapy group. Specifically, there were 21 patients with "Stage II" and "Stage IVa-IVb" separately and 15 patients with "Stage III." One patient with unavailable diagnosis stage information was present in each of the three populations: oral cavity patients from the chemotherapy-only group, hypopharynx patients from the chemotherapy-only group, and oral cavity patients from the Panitumumab and Chemotherapy group.
+
+## Part II: Death Outcome Analysis
+
+#### Utilizing the functions including *prognostic_var* and *predictive_var* from our package, the following illustrates the analysis and comparison of the death rates of patients categorized based on the selected baseline features and the actual treatment via logistic regression model in order to investigate the efficacy of Panitumumab on head and neck cancer patients.
+
+#### First of all, we have run the *prognostic_var* function to test whether diagnosis type and ECOG status, the selected two baseline variables most associated with well being, are prognostic with regard to the death outcome in the control group or not. 
+
+### 2.1 Prognostic test on Diagnosis Type and Death Outcome in the Control Group
+
+
+
+
+```{r}
+l1 <- prognostic_var(full_data, "SUBJID", "ATRT", "Chemotherapy",
+                     "DEATH_FLAG", "DIAGTYPE")
+var_coef <- l1$coefficients
+p_values <- summary(l1)$coefficients[, "Pr(>|z|)"]
+
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+
+According to the P-value, 0.57 for larynx patients, 0.92 for oral cavity patients, and 0.48 for oropharynx patients, it is concluded that diagnosis type is not prognostic in terms of the death outcomes from the chemotherapy-only group. 
+
+### 2.2 Prognostic test on ECOG and Death Outcome in the Control Group
+
+```{r}
+l2 <- prognostic_var(full_data, "SUBJID", "ATRT", "Chemotherapy",
+                     "DEATH_FLAG", "B_ECOG")
+var_coef <- l2$coef
+p_values <- summary(l2)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+Based on the p-values returned, 0.98 for the status "In bed less than 50% of the time" and 0.07 for "Symptoms but ambulatory", which are both greater than 0.05. It is seen that ECOG status, as the scale to access the disease progression is not prognostic to the death outcomes from the control group.
+
+
+#### On the other hand, we have applied the function *predictive_var* using the logistic regression model and included the six baseline features accessed in part 1 including age, gender, ethnicity, HPV status, ECOG status, and diagnosis type to not only further investigate the effect of Panitumumab on patients but also to test whether these features are predictive in terms of the death outcomes from two study groups considering the interaction between these features and Panitumumab.
+
+
+
+### 2.3 Predictivity test on Gender, Actual Treatment and Death Outcome
+```{r}
+l3 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "SEX", interaction = TRUE)
+var_coef <- l3$coefficients
+p_values <- summary(l3)$coefficients[, "Pr(>|z|)"]
+
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+According to the summary above, the p-value for gender is 0.06 and 0.14 for the actual treatment, implying the insignificance of gender and Panitumumab as individual factor on the death outcome performance. Hence, gender is not predictive with regards to the use of Panitumumab and the death outcome.
+
+### 2.4 Predictivity test on Age, Actual Treatment and Death Outcome
+
+
+```{r}
+l4 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "AGE", interaction = TRUE)
+var_coef <- l4$coefficients
+p_values <- summary(l4)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+Based on the p-values, 0.22 for age and 0.40 for the actual treatment that are greater than 0.05, the effect of age and the actual treatment on death outcomes is not significant. Therefore, predictivity of age on treatment and death outcomes is not proved.
+
+### 2.5 Predictivity test on Ethnicity, Actual Treatment and Death Outcome
+
+
+```{r}
+l5 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "RACE", interaction = TRUE)
+
+var_coef <- l5$coefficients
+p_values <- summary(l5)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+
+Based on the p-values that are no less that 0.50 for ethnicity types and the actual treatment that are greater than 0.05, the impact of ethnicity and the actual treatment on death outcomes is insignificant. Therefore, ethinicity is not a predictive factor in terms of treatment and death outcomes.
+
+### 2.6 Predictivity test on HPV status, Actual Treatment and Death Outcome
+
+```{r}
+l6 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "HPV", interaction = TRUE)
+
+var_coef <- l6$coefficients
+p_values <- summary(l6)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+As the p-value for HPV status is 0.09 and 0.14 for the actual treatment, it is concluded that these two factors individually are not significant on the performance of death outcome. As a result, HPV status is not applicable for a predictive factor in this scenario.
+
+
+### 2.7 Predictivity test on ECOG Status, Actual Treatment and Death Outcome
+```{r}
+l7 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "B_ECOG", interaction = TRUE)
+
+var_coef <- l7$coefficients
+p_values <- summary(l7)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+Based on the summary shown above, no p-values for the actual treatment, the status of "In bed less than 50% of the time", and "Symptoms but ambulatory" are less than 0.07. Therefore, both ECOG status and the actual treatment are insignificant factor in terms of the death outcome of patients. Hence, ECOG status is not predictive with regards to this clinical trail. 
+
+### 2.8 Predictivity test on Diagnosis Type, Actual Treatment and Death Outcome
+```{r}
+l8 <- predictive_var(full_data, "SUBJID", "DEATH_FLAG", "ATRT",
+                       var_col = "DIAGTYPE", interaction = TRUE)
+
+var_coef <- l8$coefficients
+p_values <- summary(l8)$coefficients[, "Pr(>|z|)"]
+as.data.frame(cbind(var_coef, p_values)) %>% kable()
+```
+According to the test result above, the p-values for the diagnosis types and the actual treatment itself are all greater than at least 0.2, which is significantly larger than 0.05. It could be told that diagnosis type and the actual treatment individually have no significant impact on the performance of death outcome. Therefore, diagnosis type is not predictive with regards to the actual treatment and the death outcome. 
+
+## Part III: Best Response Analysis by Diagnosis Type and Study Arm
+
+
+```{r, fig.align='center', fig.dim = c(10, 3)}
+get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN", "DIAGTYPE")[[1]]%>%
+   kable()
+
+print(get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN", "DIAGTYPE")[[2]])
+```
+
+The 8 bar charts above illustrate the distribution of best outcomes, complete response and partial response, among patients with different diagnosis types and study arms. Based on these charts, partial response take up the majority of the total numbers. Notably, there was no patient with complete response in the groups with hypopharnyx and chemotherapy, and oropharynx and Panitumumab plus chemotherapy. On the other hand, for larynx, there were more patients with partial response in the Panitumumab and chemotherapy group than the chemotherapy-only group. Moreover, for oral cavity, there were more patients complete response in the Panitumumab and chemotherapy group than the chemotherapy-only group. 
+
+
+## Part IV: Adverse Events Analysis
+
+#### With the application the function *get_ae* from our package, the following showcases the examination of the adverse events of patients categorized by the study arm in order to look into the effect of Panitumumab on the clinical trail participants in a more comprehensive approach.
+
+
+
+```{r, fig.align='center', fig.dim = c(10, 3), warning=FALSE}
+get_ae(full_data, "AETERM", "ATRT", 20)[[1]] %>%
+  kable()
+print(get_ae(full_data, "AETERM", "ATRT", 20)[[2]])
+```
+The table and bar chart above record the top 20 adverse events identified in patients from the two study groups. Specifically, nausea, neutropenia, vomiting, anemia, fatigue, and hypomagnesemia by the descending order were the 6 most frequent adverse events for both study groups. Stomatitis, thrombocytopenia, neuropathy, headache trombocytopenia were shown in the top 20 adverse events only among the patients from the chemotherapy-only group. Likewise, skin rash, rash, dry skin, alopecia, and cough were the unique top 20 adverse events recorded among the participants from the Panitumumab and chemotherapy group.
+
+
+It is worth noticing that comparing the count of adverse events from top 1 to top 20 between the two groups with different study arm, the number of the adverse events from the Panitumumab and chemotherapy groups were greater than the ones with same ranking form the other groups. This finding has led to two potential intrepretations. First, Panitumumab tends to relate to the increase in the total number of adverse events among patients. Second, Panitumumab is likely to be associated with the intensity of the leading adverse events comparing to those with chemotherapy only. 
+
+## Discussion
+
+According to the summary of baseline features of all participants in this clinial trial from Part I in terms of age, sex, ethnicity, hpv status, ECOG status, and diagnosis types, the participants were separated relatively evenly into one study group with chemotherapy only and the other with Panitumumab and chemotherapy, that assists the comparability of further analysis results of the death outcome performance and adverse events between the two study groups.
+
+In addition, the prognostic tests show that ECOG status and diagnosis types, the two factors most relative to the well being of the patients before recieving treatment, are not prognostic indicator for the death outcomes in the control group. Nevertheless, after conducting the tests for predictive factors considering all the six selected baseline features, it is elucidated that none of the baseline features are moderators regarding the interaction between the death outcomes of patients and the actual treatment. Moreover, the p-values of the actual treatment itself in the tests has indicated its insignificant impact on the performance of the death outcome of the participants. However, the results can be potentially affected by the number of patients with unavailable information for baseline features, indicated by "unknown" or "other" in the dataset. For example, there were a fair number of participants identified as "unknown" for HPV status taking up approximately one-third of the population from each group. On the other hand, the best outcome distributions by diagnosis types and study arm are moderately even with partial response taking the lead. Nevertheless, no notable difference regarding the best outcome distribution is noted compared to the patients from different study arm groups. 
+
+Lastly, comparing the adverse events between the two groups, there are two ways of potential interpretation that requires further verification from future researchers. One way to understand the larger number of top 20 adverse events in the group with Panitumumab and chemotherapy than the control group is that Panitumumab is associated with the increase of adverse events across the scope for patients with head and neck cancer. The other way of intrepretation is that Panitumumab is likely to lead to the intensification of the common adverse events shared with the control group.
+
+
+## Conclusion
+
+In conclusion, after the exploration of baseline features of the head and neck cancer participants, logistic regression tests to testify predictive and prognostic features and adverse events analysis, we reject the $H_{1}$ hypothesis that Panitumumab has an effect on the participants with the head and neck cancer in terms of the death outcome and adverse events distribution. In addition, we conclude with the $H_{0}$ hypothesis that Panitumumab does not have effect on the participants with the head and neck cancer in terms of the death outcome and adverse events distribution. We call upon the society's attention for the population with head and neck cancers and encourage researchers to delve into effective treatments for this population.
+
+On the other hand, this research serves as the demonstration regarding the application of our "bis620.2022" package on scientific researches on medical treatments in the form of two-arm clinical trials. Specifically, functions including *plot_age*, *descriptive_var*, and *get_diag* are used for baseline features summary of participants in this clinical trial. Functions such as *prognostic_var* and *predictive_var* are utilied for testifying prognostic features and predictive features in terms of the performance of death outcome among the patients and assessing the impact of the actual treatment simultaneously. Lastly, the function *get_ae* is used in the third part of our analysis to examine the adverse events in both groups. To have a more comprehensive understanding of functions included in this "bis620.2022" package, please check the "R" folder for further references regarding each function.
+

@@ -16,8 +16,11 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(bis620.2022)
-library(dplyr)
+```
+
+```{r, include = FALSE}
 library(knitr)
+library(dplyr)
 ```
 
 ## Introduction
@@ -28,7 +31,9 @@ For demonstration, we will use the dataset **A Phase 3 Randomized Trial of Chemo
 
 -   To what extent does panitumumab perform on patients with the head and neck cancer?
     -   How do different groups (based on age, sex, ethnicity, HPV, ECOG status, and cancer type including diagnosis stage) of patients respond to panitumumab?
+    -   What is the distribution of best outcomes in terms of progressive disease, stable disease, partial response and complete response in different diagnosis types faceted by study arms?
     -   Based on the actual treatment, what are the adverse events associated and the distributions of severity levels accordingly?
+
 
 Our hypothesis is that:
 
@@ -38,14 +43,13 @@ $H_{1}$: Panitumumab has an effect on the participants with the head and neck ca
 
 Reference:
 
-*Amgen. (2018). A Phase 3 Randomized Trial of Chemotherapy With or Without Panitumumab in Patients With Metastatic and/or Recurrent Squamous Cell Carcinoma of the Head and Neck (SCCHN) [Data set]. Project Data Sphere. <https://doi.org/10.34949/3EAJ-MD88>*
+*Amgen. (2018). A Phase 3 Randomized Trial of Chemotherapy With or Without Panitumumab in Patients With Metastatic and/or Recurrent Squamous Cell Carcinoma of the Head and Neck (SCCHN) [Data set]. Project Data Sphere. [Study Link](https://doi.org/10.34949/3EAJ-MD88)*
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
 
 ```
 
@@ -54,12 +58,13 @@ knitr::opts_chunk$set(
 data("full_data")
 
 #> a brief overview of the first patient from the demo dataset
-full_data[1, ]
+full_data[1, ] %>% kable()
 ```
 
 ## Method
 
-In order to delve into the research questions, we plan to divide the research into two sections. The first section is to investigate the distribution of the baseline characteristics of the patients including age, sex, the primary tumor diagnosis including disease stage, the HPV status, and the baseline ECOG performance status(the scale to access one's disease progression). Secondly, after acquiring a comprehensive understanding of the baseline features of these participants, we will analyze the efficacy of Panitumumab by comparing the death rate of patients categorized based on the selected baseline features and the actual treatment. Lastly, we will evaluate the adverse event distributions between participants with and without the intake of Panitumumab.
+In order to delve into the research questions, we plan to divide the research into two sections. The first section is to investigate the distribution of the baseline characteristics of the patients including age, sex, the primary tumor diagnosis including disease stage, the HPV status, and the baseline ECOG performance status(the scale to access one's disease progression). Secondly, after acquiring a comprehensive understanding of the baseline features of these participants, we will analyze the efficacy of Panitumumab by comparing the death rate of patients categorized based on the selected baseline features and the actual treatment. Furthermore, we will look into and compare the distributions of best outcomes by diagnosis types and study arms. Lastly, we will evaluate the adverse event distributions between participants with and without the intake of Panitumumab.
+
 
 ## Part I: Baseline Characteristics of Patients
 
@@ -120,7 +125,8 @@ According to the illustrations above, most patients from both study groups had "
 
 ```{r,fig.align='center', fig.dim = c(10, 3)}
 get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT")[[1]] %>%
-  kable()#without stages
+  head(10) %>% 
+  kable()#the first 10 rows of the counts of diagnosis types without stages are shown below
 print(get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT")[[2]])
 ```
 
@@ -128,7 +134,8 @@ For both study groups, the distribution of Larynx and Oripharynx patients were r
 
 ```{r, fig.align='center', fig.dim = c(10, 3)}
 get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT", "DIAGSTAG")[[1]] %>%
-  kable()#with stages
+  head(10) %>% 
+  kable()#the first 10 rows of the counts of diagnosis types with stages are shown below
 print(get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT", "DIAGSTAG")[[2]])
 ```
 
@@ -244,7 +251,20 @@ as.data.frame(cbind(var_coef, p_values)) %>% kable()
 ```
 According to the test result above, the p-values for the diagnosis types and the actual treatment itself are all greater than at least 0.2, which is significantly larger than 0.05. It could be told that diagnosis type and the actual treatment individually have no significant impact on the performance of death outcome. Therefore, diagnosis type is not predictive with regards to the actual treatment and the death outcome. 
 
-## Part III: Adverse Events Analysis
+## Part III: Best Response Analysis by Diagnosis Type and Study Arm
+
+
+```{r, fig.align='center', fig.dim = c(10, 3)}
+get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN", "DIAGTYPE")[[1]]%>%
+   kable()
+
+print(get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN", "DIAGTYPE")[[2]])
+```
+
+The 8 bar charts above illustrate the distribution of best outcomes, complete response and partial response, among patients with different diagnosis types and study arms. Based on these charts, partial response take up the majority of the total numbers. Notably, there was no patient with complete response in the groups with hypopharnyx and chemotherapy, and oropharynx and Panitumumab plus chemotherapy. On the other hand, for larynx, there were more patients with partial response in the Panitumumab and chemotherapy group than the chemotherapy-only group. Moreover, for oral cavity, there were more patients complete response in the Panitumumab and chemotherapy group than the chemotherapy-only group. 
+
+
+## Part IV: Adverse Events Analysis
 
 #### With the application the function *get_ae* from our package, the following showcases the examination of the adverse events of patients categorized by the study arm in order to look into the effect of Panitumumab on the clinical trail participants in a more comprehensive approach.
 
@@ -262,7 +282,12 @@ It is worth noticing that comparing the count of adverse events from top 1 to to
 
 ## Discussion
 
-According to the summary of baseline features of all participants in this clinial trial from Part I in terms of age, sex, ethnicity, hpv status, ECOG status, and diagnosis types, the participants were separated relatively evenly into one study group with chemotherapy only and the other with Panitumumab and chemotherapy, that assists the comparability of further analysis results of the death outcome performance and adverse events between the two study groups. In addition, the prognostic tests show that ECOG status and diagnosis types, the two factors most relative to the well being of the patients before recieving treatment, are not prognostic indicator for the death outcomes in the control group. Nevertheless, after conducting the tests for predictive factors considering all the six selected baseline features, it is elucidated that none of the baseline features are moderators regarding the interaction between the death outcomes of patients and the actual treatment. Moreover, the p-values of the actual treatment itself in the tests has indicated its insignificant impact on the performance of the death outcome of the participants. However, the results can be potentially affected by the number of patients with unavailable information for baseline features, indicated by "unknown" or "other" in the dataset. For example, there were a fair number of participants identified as "unknown" for HPV status taking up approximately one-third of the population from each group. Lastly, comparing the adverse events between the two groups, there are two ways of potential interpretation that requires further verification from future researchers. One way to understand the larger number of top 20 adverse events in the group with Panitumumab and chemotherapy than the control group is that Panitumumab is associated with the increase of adverse events across the scope for patients with head and neck cancer. The other way of intrepretation is that Panitumumab is likely to lead to the intensification of the common adverse events shared with the control group.
+According to the summary of baseline features of all participants in this clinial trial from Part I in terms of age, sex, ethnicity, hpv status, ECOG status, and diagnosis types, the participants were separated relatively evenly into one study group with chemotherapy only and the other with Panitumumab and chemotherapy, that assists the comparability of further analysis results of the death outcome performance and adverse events between the two study groups.
+
+In addition, the prognostic tests show that ECOG status and diagnosis types, the two factors most relative to the well being of the patients before recieving treatment, are not prognostic indicator for the death outcomes in the control group. Nevertheless, after conducting the tests for predictive factors considering all the six selected baseline features, it is elucidated that none of the baseline features are moderators regarding the interaction between the death outcomes of patients and the actual treatment. Moreover, the p-values of the actual treatment itself in the tests has indicated its insignificant impact on the performance of the death outcome of the participants. However, the results can be potentially affected by the number of patients with unavailable information for baseline features, indicated by "unknown" or "other" in the dataset. For example, there were a fair number of participants identified as "unknown" for HPV status taking up approximately one-third of the population from each group. On the other hand, the best outcome distributions by diagnosis types and study arm are moderately even with partial response taking the lead. Nevertheless, no notable difference regarding the best outcome distribution is noted compared to the patients from different study arm groups. 
+
+Lastly, comparing the adverse events between the two groups, there are two ways of potential interpretation that requires further verification from future researchers. One way to understand the larger number of top 20 adverse events in the group with Panitumumab and chemotherapy than the control group is that Panitumumab is associated with the increase of adverse events across the scope for patients with head and neck cancer. The other way of intrepretation is that Panitumumab is likely to lead to the intensification of the common adverse events shared with the control group.
+
 
 ## Conclusion
 
