@@ -1,4 +1,3 @@
-library(ggplot2)
 test_that(
   "The descriptive_var() errors when no subject_id_col, var_col,
   treat_col",
