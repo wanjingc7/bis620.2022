@@ -35,9 +35,9 @@ prognostic_var <- function(df, subject_id_col, treat_col, control_val,
   treat_col_symbol <- as.symbol(treat_col)
   death_col_symbol <- as.symbol(death_col)
 
-  if (length(var_col) == 1 ){
+  if (length(var_col) == 1) {
   var_col_symbol <- as.symbol(var_col)
-  }else{
+  }else {
     ret <- paste(c("Wrong input length in var_col,",
                    "please provide only one variable"), collapse = " ")
     return(ret)

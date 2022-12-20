@@ -65,24 +65,23 @@ get_response <- function(df, subject_id_col, treat_col,
                               yes = TRUE,
                               no = as.symbol(group_col))
 
-  if(!is.character(unlist(df[, response_col]))){
+  if (!is.character(unlist(df[, response_col]))) {
     return("Wrong input type, response_col should be character type")
   }
 
-  if(!is.null(response_conf_col)){
-    if(!is.character(unlist(df[, response_conf_col]))){
+  if (!is.null(response_conf_col)) {
+    if (!is.character(unlist(df[, response_conf_col]))) {
       return("Wrong input type, response_conf_col should be character type")
     }
   }
 
-  if(!is.null(group_col)){
-    if(is.character(unlist(df[, group_col]))){
+  if (!is.null(group_col)) {
+    if (is.character(unlist(df[, group_col]))) {
     df[which(is.na(df[, group_col])), group_col] <- "Unknown"
     df[which(df[, group_col] == ""), group_col] <- "Unknown"
-    }
-    else{
+    }else {
       ret <- "Wrong input type for group_col, should be character"
-      return (ret)
+      return(ret)
     }
   }
 
@@ -169,7 +168,7 @@ get_response <- function(df, subject_id_col, treat_col,
       theme(plot.title = element_text(hjust = 0.5)) +
       facet_grid(rows = vars({{treat_col_symbol}}),
                  cols = vars({{group_col_symbol}})) +
-      ylim(c(0, max(best_response$n + 10)))+
+      ylim(c(0, max(best_response$n + 10))) +
       scale_x_discrete(limits = c("Progressive disease", "Stable disease",
                                   "Partial response", "Complete response"))
   }
