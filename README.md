@@ -12,12 +12,22 @@
 coverage](https://codecov.io/gh/wanjingc7/bis620.2022/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wanjingc7/bis620.2022?branch=main)
 <!-- badges: end -->
 
-The goal of bis620.2022 is to 1. Capture spectral signature of
-Accelerometry data with three dimensions using Fast Fourier Transform
-(FFT) and also calculate frequency with time.
+The goal of bis620.2022 is to
+
+1.  Capture spectral signature of Accelerometry data with three
+    dimensions using Fast Fourier Transform (FFT) and also calculate
+    frequency with time.
 
 2.  Create a visualization for movements in three dimensions with time
     or frequency.
+
+## Links to coverage and Lint Results
+
+[Links to
+Coverage](https://github.com/wanjingc7/bis620.2022/actions/workflows/test-coverage.yaml)
+
+[Links to Lint
+Results](https://github.com/wanjingc7/bis620.2022/actions/workflows/lint.yaml)
 
 ## Installation
 
@@ -63,9 +73,9 @@ ukb_accel |> accel_plot()
 
 ``` r
 
-#to create visualization of fast discrete fourier transformed
+#to create visualization of logarithm transformed FFT
 #movement with frequency
-ukb_accel |> spectral_signature() |> accel_plot()
+ukb_accel |> spectral_signature(take_log = T) |> accel_plot()
 ```
 
 <img src="man/figures/README-example-2.png" width="100%" />
