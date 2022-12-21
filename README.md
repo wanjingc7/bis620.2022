@@ -84,7 +84,7 @@ ukb_accel |> spectral_signature()
 ukb_accel |> accel_plot()
 ```
 
-<img src="man/figures/README-example Accelerometry data-1.png" width="100%" />
+<img src="man/figures/README-example-Accelerometry-data-1.png" width="100%" />
 
 ``` r
 
@@ -93,7 +93,7 @@ ukb_accel |> accel_plot()
 ukb_accel |> spectral_signature(take_log = T) |> accel_plot()
 ```
 
-<img src="man/figures/README-example Accelerometry data-2.png" width="100%" />
+<img src="man/figures/README-example-Accelerometry-data-2.png" width="100%" />
 
 ``` r
 #only a few examples shown here, to see full list of examples, please
@@ -110,7 +110,7 @@ plot_age(df = full_data, subject_id_col = "SUBJID", age_col = "AGE",
 #>   Please report the issue to the authors.
 ```
 
-<img src="man/figures/README-example Clinical Trials data-1.png" width="100%" />
+<img src="man/figures/README-example-Clinical-Trials-data-1.png" width="100%" />
 
 ``` r
 
@@ -136,7 +136,7 @@ get_ae(df = full_data, ae_col = "AETERM", treat_col = "ATRT", top = 30)
 #> [[2]]
 ```
 
-<img src="man/figures/README-example Clinical Trials data-2.png" width="100%" />
+<img src="man/figures/README-example-Clinical-Trials-data-2.png" width="100%" />
 
 ``` r
 

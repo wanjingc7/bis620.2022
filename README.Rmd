@@ -64,7 +64,7 @@ devtools::install_github("wanjingc7/bis620.2022")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example Accelerometry data}
+```{r example-Accelerometry-data}
 library(bis620.2022)
 ## basic example code
 
@@ -81,7 +81,7 @@ ukb_accel |> spectral_signature(take_log = T) |> accel_plot()
 ```
 
 
-```{r example Clinical Trials data}
+```{r example-Clinical-Trials-data}
 #only a few examples shown here, to see full list of examples, please
 #check the vignette.
 
