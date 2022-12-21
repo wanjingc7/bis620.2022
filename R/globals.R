@@ -1,3 +1,4 @@
 utils::globalVariables(c("X", "Y", "Z", "value", "n", "count",
                          "response_code", "freq", "label",
-                         "var_col", "."))
+                         "var_col", ".", "death_vector", "treat_vector",
+                         "var_vector"))

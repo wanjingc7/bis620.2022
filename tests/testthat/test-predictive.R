@@ -55,11 +55,9 @@ test_that(
       select(SUBJID, DEATH_FLAG, ATRT) %>%
       distinct()
 
-    treat_vector <- unlist(test[, "ATRT"])
-    death_vector <- unlist(test[, "DEATH_FLAG"])
-
-    expect <- glm(as.factor(death_vector) ~
-                    as.factor(treat_vector),
+    expect <- glm(as.factor(DEATH_FLAG) ~
+                    as.factor(ATRT),
+                  data = test,
                   family = binomial(link = "logit"))
     expect_true(identical(l$coefficients, expect$coefficients))
   }
@@ -79,12 +77,9 @@ test_that(
       select(SUBJID, DEATH_FLAG, ATRT, DIAGSTAG) %>%
       distinct()
 
-    var_vector <- unlist(test[, "DIAGSTAG"])
-    treat_vector <- unlist(test[, "ATRT"])
-    death_vector <- unlist(test[, "DEATH_FLAG"])
-
-    expect <- glm(as.factor(death_vector) ~
-                    var_vector + as.factor(treat_vector),
+    expect <- glm(as.factor(DEATH_FLAG) ~
+                    as.factor(ATRT) + DIAGSTAG,
+                  data = test,
                   family = binomial(link = "logit"))
     expect_true(identical(l$coefficients, expect$coefficients))
   }
@@ -104,12 +99,10 @@ test_that(
       select(SUBJID, DEATH_FLAG, ATRT, DIAGSTAG) %>%
       distinct()
 
-    var_vector <- unlist(test[, "DIAGSTAG"])
-    treat_vector <- unlist(test[, "ATRT"])
-    death_vector <- unlist(test[, "DEATH_FLAG"])
 
-    expect <- glm(as.factor(death_vector) ~
-                    var_vector * as.factor(treat_vector),
+    expect <- glm(as.factor(DEATH_FLAG) ~
+                    as.factor(ATRT) * DIAGSTAG,
+                  data = test,
                   family = binomial(link = "logit"))
     expect_true(identical(l$coefficients, expect$coefficients))
   }
@@ -127,12 +120,9 @@ test_that(
       select(SUBJID, DEATH_FLAG, ATRT, AGE) %>%
       distinct()
 
-    var_vector <- unlist(test[, "AGE"])
-    treat_vector <- unlist(test[, "ATRT"])
-    death_vector <- unlist(test[, "DEATH_FLAG"])
-
-    expect <- glm(as.factor(death_vector) ~
-                    var_vector * as.factor(treat_vector),
+    expect <- glm(as.factor(DEATH_FLAG) ~
+                    as.factor(ATRT) * AGE,
+                  data = test,
                   family = binomial(link = "logit"))
     expect_true(all.equal(l$coefficients, expect$coefficients))
   }
