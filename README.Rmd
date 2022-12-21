@@ -26,11 +26,23 @@ knitr::opts_chunk$set(
 
 The goal of bis620.2022 is to 
 
+For the Accelerometry data: 
+
 1. Capture spectral signature of Accelerometry data with three dimensions using Fast Fourier Transform (FFT) and also calculate frequency with time.
 
 2. Create a visualization for movements in three dimensions with time or frequency.
 
 
+For the clinical trials data of Panitumumab on head-neck cancer patients:
+
+1. Create histograms of distribution of background information of the 
+participants, including age, sex, race, diagnosis (with or without stages).
+
+3. Create histograms of distribution of the treatment outcome: adverse events
+and best treatment response.
+
+4. Conduct logistic regressions to test whether a certain factor is prognostic
+or predictive. 
 
 
 ## Links to coverage and Lint Results
@@ -52,7 +64,7 @@ devtools::install_github("wanjingc7/bis620.2022")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example Accelerometry data}
 library(bis620.2022)
 ## basic example code
 
@@ -69,3 +81,27 @@ ukb_accel |> spectral_signature(take_log = T) |> accel_plot()
 ```
 
 
+```{r example Clinical Trials data}
+#only a few examples shown here, to see full list of examples, please
+#check the vignette.
+
+data("full_data")
+
+#plot age distribution of participants
+plot_age(df = full_data, subject_id_col = "SUBJID", age_col = "AGE",
+         treat_col = "ATRT", age_interval = 5)
+
+
+#plot adverse events distribution of participants
+get_ae(df = full_data, ae_col = "AETERM", treat_col = "ATRT", top = 30)
+
+#conduct a logstic regression to see if age is prognostic
+prognostic_var(df = full_data, subject_id_col = "SUBJID", treat_col = "ATRT",
+               control_val = "Chemotherapy", death_col = "DEATH_FLAG", 
+               var_col = "AGE")
+
+#conduct a logstic regression to see if age is predictive
+predictive_var(df = full_data, subject_id_col = "SUBJID",
+               death_col = "DEATH_FLAG", treat_col = "ATRT", var_col = "AGE",
+               interaction = T)
+```
