@@ -50,14 +50,16 @@ print(descriptive_var(full_data, "SUBJID", "B_ECOG", "ATRT")[[2]])
 
 ## ----fig.align='center', fig.dim = c(10, 3)-----------------------------------
 get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT")[[1]] %>%
-  head(10) %>% 
-  kable()#the first 10 rows of the counts of diagnosis types without stages are shown below
+  head(10) %>%
+  kable()#the first 10 rows of the counts of diagnosis types without
+#stages are shown below
 print(get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT")[[2]])
 
 ## ---- fig.align='center', fig.dim = c(10, 3)----------------------------------
 get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT", "DIAGSTAG")[[1]] %>%
-  head(10) %>% 
-  kable()#the first 10 rows of the counts of diagnosis types with stages are shown below
+  head(10) %>%
+  kable()#the first 10 rows of the counts of diagnosis types with stages
+#are shown below
 print(get_diag(full_data, "SUBJID", "DIAGTYPE", "ATRT", "DIAGSTAG")[[2]])
 
 ## -----------------------------------------------------------------------------
@@ -122,11 +124,13 @@ var_coef <- l8$coefficients
 p_values <- summary(l8)$coefficients[, "Pr(>|z|)"]
 as.data.frame(cbind(var_coef, p_values)) %>% kable()
 
-## ---- fig.align='center', fig.dim = c(10, 3)----------------------------------
-get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN", "DIAGTYPE")[[1]]%>%
+## ---- fig.align ='center', fig.dim = c(10, 3)---------------------------------
+get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN",
+             "DIAGTYPE")[[1]] %>%
    kable()
 
-print(get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN", "DIAGTYPE")[[2]])
+print(get_response(full_data, "SUBJID", "ATRT", "RSRESP", "RSCONFYN",
+                   "DIAGTYPE")[[2]])
 
 ## ---- fig.align='center', fig.dim = c(10, 3), warning=FALSE-------------------
 get_ae(full_data, "AETERM", "ATRT", 20)[[1]] %>%
